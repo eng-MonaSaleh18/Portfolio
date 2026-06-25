@@ -1,0 +1,76 @@
+<?php
+namespace App\Filament\Resources;
+
+use App\Filament\Resources\VisitorMessageResource\Pages;
+use App\Models\VisitorMessage;
+use Filament\Forms\Form;
+use Filament\Resources\Resource;
+use Filament\Tables;
+use Filament\Tables\Table;
+
+class VisitorMessageResource extends Resource
+{
+    protected static ?string $model = VisitorMessage::class;
+
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    public static function form(Form $form): Form
+    {
+        return $form
+            ->schema([
+                //
+            ]);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return $table
+            ->columns([
+                Tables\Columns\TextColumn::make('name')
+                    ->label('اسم الزائر')
+                    ->searchable(),
+
+                Tables\Columns\TextColumn::make('email')
+                    ->label('البريد الإلكتروني')
+                    ->copyable(), // يسمح لك بنسخ الإيميل بضغطة واحدة للرد عليه
+
+                Tables\Columns\TextColumn::make('message_subject')
+                    ->label('الموضوع')
+                    ->limit(30),
+
+                Tables\Columns\TextColumn::make('created_at')
+                    ->label('تاريخ الإرسال')
+                    ->dateTime()
+                    ->sortable(),
+            ])
+            ->filters([
+                //
+            ])
+            ->actions([
+                // زر "View" بدلاً من "Edit" لمشاهدة نص الرسالة كاملاً
+                Tables\Actions\ViewAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
+            ]);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index'  => Pages\ListVisitorMessages::route('/'),
+            'create' => Pages\CreateVisitorMessage::route('/create'),
+            'edit'   => Pages\EditVisitorMessage::route('/{record}/edit'),
+        ];
+    }
+}
