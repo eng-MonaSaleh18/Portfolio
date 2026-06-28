@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Filament\Models\Contracts\FilamentUser;
+use Filament\Panel;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements FilamentUser
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -27,7 +28,6 @@ class User extends Authenticatable
         'linkedin_link',
         'phone',
         'telegram_link',
-        
     ];
 
     /**
@@ -47,5 +47,15 @@ class User extends Authenticatable
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'password' => 'hashed',
     ];
+
+    /**
+     * تحديد صلاحية الوصول للوحة تحكم Filament
+     */
+    public function canAccessPanel(Panel $panel): bool
+    {
+        // يسمح بالدخول لجميع المستخدمين، يمكنك إضافة شرط هنا لاحقاً إذا أردت
+        return true;
+    }
 }
