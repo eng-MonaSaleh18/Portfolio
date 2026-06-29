@@ -16,3 +16,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/' , [PortfolioController::class , 'getPortfolio']);
 Route::post('/contact', [PortfolioController::class, 'storeMessage'])->name('contact.send');
+
+Route::get('/fix-session', function () {
+    \Illuminate\Support\Facades\DB::table('sessions')->truncate();
+    return "تم مسح الجلسات بنجاح، يمكنك الآن تسجيل الدخول!";
+});
