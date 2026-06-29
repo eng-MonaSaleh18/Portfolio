@@ -53,7 +53,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             
             ->userMenuItems([
-                // زر الخروج في القائمة العلوية
+                'logout' => \Filament\Navigation\MenuItem::make()->label('Log out'),
             ])
             ->middleware([
                 EncryptCookies::class,
