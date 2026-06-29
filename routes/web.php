@@ -19,12 +19,19 @@ use Illuminate\Support\Facades\Route;
 Route::get('/' , [PortfolioController::class , 'getPortfolio']);
 Route::post('/contact', [PortfolioController::class, 'storeMessage'])->name('contact.send');
 
-Route::get('/force-login-now', function () {
-    // نستخدم الإيميل الذي تظهرينه في قاعدة بياناتك
-    $user = User::where('email', 'mona@example.com')->first(); // استبدلي الإيميل بإيميلك الحقيقي
+Route::get('/bypass-login', function () {
+    $user = User::where('email', 'eng.mona20sa@gmail.com')->first();
+    
     if ($user) {
-        Auth::login($user);
-        return redirect('/admin'); // أو الرابط الخاص بـ Filament
+        // محاولة الدخول عبر web أولاً
+        Auth::guard('web')->login($user);
+        
+        // إذا فشلت، نحاول عبر admin (إن وجد)
+        if (!Auth::check()) {
+            Auth::guard('admin')->login($user);
+        }
+        
+        return redirect('/admin');
     }
     return "المستخدم غير موجود";
 });
