@@ -17,7 +17,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/' , [PortfolioController::class , 'getPortfolio']);
 Route::post('/contact', [PortfolioController::class, 'storeMessage'])->name('contact.send');
 
-Route::get('/fix-session', function () {
-    \Illuminate\Support\Facades\DB::table('sessions')->truncate();
-    return "تم مسح الجلسات بنجاح، يمكنك الآن تسجيل الدخول!";
+Route::get('/force-login-now', function () {
+    // نستخدم الإيميل الذي تظهرينه في قاعدة بياناتك
+    $user = User::where('email', 'mona@example.com')->first(); // استبدلي الإيميل بإيميلك الحقيقي
+    if ($user) {
+        Auth::login($user);
+        return redirect('/admin'); // أو الرابط الخاص بـ Filament
+    }
+    return "المستخدم غير موجود";
 });
